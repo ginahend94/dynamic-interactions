@@ -4,31 +4,44 @@ export const dropdown = () => {
         position:absolute;
         list-style:none;
         top:100%;
-        width: 100%;
-        border:solid 1px green;
+        min-width: 100%;
+        width:max-content;
+        max-height:0px;
+        overflow:hidden;
+        transition:.3s;
     `;
   dropdowns.forEach((a) => {
     const wrapper = document.createElement('div');
     a.parentElement.append(wrapper);
-    const label = document.createElement('span');
-    wrapper.append(label, a);
     wrapper.style = `
-        position:relative;
-        display:inline-block;
-        border:solid 1px red
-        `;
-    const labelInfo = (() => {
+    position:relative;
+    display:inline-block;
+    `;
+    const labelOptions = (() => {
       const obj = {};
-      const items = a.dataset.label.split(',').map((a) => {
-        
-        a = a.trim();
+      a.dataset.label.split(',').forEach((a) => {
+        let arr = a.split(':');
+        arr = arr.map((a) => {
+          a = a.trim().replace(/['"]/g, '');
+          return a;
+        });
+        obj[arr[0]] = arr[1];
       });
-      console.log(items);
+      obj.class = obj.class.split(' ');
+      return obj;
     })();
-    label.textContent = a.dataset.dropdown;
-    a.parentElement.insertBefore(label, a);
+    const label = document.createElement(labelOptions.tag);
+    wrapper.append(label, a);
+    label.textContent = labelOptions.text;
     label.classList.add('dropdown-label');
+    if (labelOptions.class) label.classList.add(...labelOptions.class)
     label.style.display = 'inline-block';
     a.style = style;
+    wrapper.addEventListener('mouseenter', () => {
+      a.style.maxHeight = '100vh';
+    })
+    wrapper.addEventListener('mouseleave', () => {
+      a.style.maxHeight = '0px'
+    })
   });
 };
