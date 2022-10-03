@@ -34,18 +34,46 @@ export const dropdown = () => {
     wrapper.append(label, a);
     label.textContent = labelOptions.text;
     label.classList.add('dropdown-label');
-    if (labelOptions.class) label.classList.add(...labelOptions.class)
+    if (labelOptions.class) label.classList.add(...labelOptions.class);
     label.style.display = 'inline-block';
     a.style = style;
     wrapper.addEventListener('mouseenter', () => {
       a.style.maxHeight = '100vh';
-    })
+    });
     wrapper.addEventListener('mouseleave', () => {
-      a.style.maxHeight = '0px'
-    })
+      a.style.maxHeight = '0px';
+    });
   });
 };
 
 export const mobileMenu = () => {
-  
-}
+  const menu = document.querySelector('[data-menu]');
+  let menuOpen = false;
+  const openButton = document.querySelector('[data-button]');
+  const openText = openButton.textContent;
+  const openStyle = `
+    position:absolute;
+    left:0;
+    z-index:9999999999999999999999999999999999;
+    width:100%;
+    height:100vh;
+    transition:.2s;
+  `;
+  const closedStyle = `
+    height:0px;
+    transition:.2s;
+  `;
+  const toggleMenu = () => {
+    if (!menuOpen) {
+      menu.style = openStyle;
+      openButton.textContent = 'Close';
+    } else {
+      menu.style = closedStyle;
+      openButton.textContent = openText;
+    }
+    menuOpen = !menuOpen;
+  };
+
+  openButton.addEventListener('click', toggleMenu);
+  menu.style = closedStyle;
+};
